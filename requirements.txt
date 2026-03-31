@@ -1,0 +1,8 @@
+fastapi[standard]
+pydantic
+uvicorn
+plotly
+kaleido
+sqlmodel
+pytest
+httpx
