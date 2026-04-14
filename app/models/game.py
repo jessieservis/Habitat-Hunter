@@ -23,4 +23,5 @@ class GameRound(SQLModel, table=True):
     user_guess: Optional[str] = (
         None  # Optional until the player actually makes a guess
     )
-    points_earned: int = Field(default=0)  
+    score: int = Field(default=0)
+    is_completed: bool = Field(default=False)

@@ -1,7 +1,8 @@
 """Routes with business logic for the game."""
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, Form, HTTPException
 from sqlmodel import Session, select
+from app.models import species
 from app.models.game import GameSession, GameRound
 from app.models.species import Species
 from app.database.connection import get_db
@@ -81,4 +82,113 @@ def start_round(
     }
 
 
-# TODO: Implement the get clue and make guess endpoints
+@router.get("/{game_id}/{round_id}/clue", status_code=200)
+def give_clue(
+    game_id: uuid.UUID,
+    round_id: uuid.UUID,
+    db: Session = Depends(get_db),
+):
+    """
+    Gives a clue for the current animal
+    """
+    # Ensure the game session exists and is active
+    game = db.get(GameSession, game_id)
+    if not game:
+        raise HTTPException(status_code=404, detail="Game session not found")
+    if game.is_active is False:
+        raise HTTPException(status_code=400, detail="Game session is not active")
+
+    # Ensure the round exists and belongs to the game session
+    round = db.get(GameRound, round_id)
+    if not round:
+        raise HTTPException(status_code=404, detail="Round not found")
+    if round.game_id != game_id:
+        raise HTTPException(
+            status_code=400, detail="Round does not belong to this game session"
+        )
+
+    # Give a clue
+    species = db.get(Species, round.species_id)
+    if round.clues_used >= len(species.clues):
+        raise HTTPException(
+            status_code=400, detail="No more clues available for this animal"
+        )
+    clue = species.clues[round.clues_used]
+
+    # Increment clues used
+    round.clues_used += 1
+
+    # Save round to db
+    db.add(round)
+    db.commit()
+    db.refresh(round)
+
+    # Return the clue
+    return {
+        "clue": clue,
+    }
+
+
+@router.post("/{game_id}/{round_id}/guess", status_code=200)
+def make_guess(
+    game_id: uuid.UUID,
+    round_id: uuid.UUID,
+    guess: str = Form(...),
+    db: Session = Depends(get_db),
+):
+    """
+    Handles a user's guess for the current animal
+    """
+    # Ensure the game session exists and is active
+    game = db.get(GameSession, game_id)
+    if not game:
+        raise HTTPException(status_code=404, detail="Game session not found")
+    if game.is_active is False:
+        raise HTTPException(status_code=400, detail="Game session is not active")
+
+    # Ensure the round exists and belongs to the game session
+    round = db.get(GameRound, round_id)
+    if not round:
+        raise HTTPException(status_code=404, detail="Round not found")
+    if round.game_id != game_id:
+        raise HTTPException(
+            status_code=400, detail="Round does not belong to this game session"
+        )
+    if round.is_completed:
+        raise HTTPException(status_code=400, detail="Round is already completed")
+
+    species = db.get(Species, round.species_id)
+
+    # Check the guess against the correct answer
+    cleaned_guess = guess.strip().lower()
+    location = species.location.strip().lower()
+    is_correct = cleaned_guess == location
+
+    # Calculate score (Example: 1000 pts base, minus 200 per clue used)
+    score = 0
+    if is_correct:
+        penalty = round.clues_used * 200
+        score = max(100, 1000 - penalty)  # Minimum of 100 points if they get it right
+
+    # Save round
+    round.is_completed = is_correct
+    round.score = score
+    db.add(round)
+    db.commit()
+
+    # TODO Generate the Plotly Map (Integration point for the next service)
+    # map_base64 = generate_comparison_map(cleaned_guess, actual_location)
+    map_base64 = "base64_string_placeholder"
+
+    return {
+        "correct": is_correct,
+        "location": species.location,
+        "score": score,
+        "clues_used": round.clues_used,
+        "map_image": map_base64,
+        "message": (
+            "Correct!"
+            if is_correct
+            else f"Incorrect. The animal was from {species.location}."
+        ),
+    }
