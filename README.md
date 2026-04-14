@@ -9,6 +9,10 @@ A FastAPI project: Guess the location of endangered species.
 
 # Sources
 1. https://fastapi.tiangolo.com/virtual-environments/#create-a-virtual-environment
+2. Figma Make for frontend dev
+   1. includes components from [shadcn/ui](https://ui.shadcn.com/) used under [MIT license](https://github.com/shadcn-ui/ui/blob/main/LICENSE.md).
+   2. includes photos from [Unsplash](https://unsplash.com) used under [license](https://unsplash.com/license).
+
 
 # Credits
 Created by Jessie Servis for CPS420 with Dr. Patrick Seeling
