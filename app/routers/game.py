@@ -8,6 +8,7 @@ from app.models.species import Species
 from app.database.connection import get_db
 import uuid
 import random
+from app.services.mapping import generate_comparison_map
 
 router = APIRouter(prefix="/game", tags=["Game"])
 
@@ -176,9 +177,8 @@ def make_guess(
     db.add(round)
     db.commit()
 
-    # TODO Generate the Plotly Map (Integration point for the next service)
-    # map_base64 = generate_comparison_map(cleaned_guess, actual_location)
-    map_base64 = "base64_string_placeholder"
+    # Generate the Plotly Map
+    map_base64 = generate_comparison_map(cleaned_guess, location)
 
     return {
         "correct": is_correct,
