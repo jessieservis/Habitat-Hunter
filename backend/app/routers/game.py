@@ -2,13 +2,13 @@
 
 from fastapi import APIRouter, Depends, Form, HTTPException
 from sqlmodel import Session, select
-from app.models import species
-from app.models.game import GameSession, GameRound
-from app.models.species import Species
-from app.database.connection import get_db
+from backend.app.models import species
+from backend.app.models.game import GameSession, GameRound
+from backend.app.models.species import Species
+from backend.app.database.connection import get_db
 import uuid
 import random
-from app.services.mapping import generate_comparison_map
+from backend.app.services.mapping import generate_comparison_map
 
 router = APIRouter(prefix="/game", tags=["Game"])
 

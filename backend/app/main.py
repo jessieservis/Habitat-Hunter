@@ -3,11 +3,12 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from sqlmodel import SQLModel, Session, select
-from app.config.database import engine
-from app.models import game, species
-from app.models.species import Species
-from app.routers import game as game_router
-from scripts.seed_db import seed_animals
+from backend.app.config.database import engine
+from backend.app.models import species
+from backend.app.models.species import Species
+from backend.app.routers import game as game_router
+from backend.app.models import game
+from backend.scripts.seed_db import seed_animals
 
 
 @asynccontextmanager
