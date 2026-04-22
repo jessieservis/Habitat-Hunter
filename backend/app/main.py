@@ -7,7 +7,7 @@ from backend.app.config.database import engine
 from backend.app.models import species
 from backend.app.models.species import Species
 from backend.app.routers import game as game_router
-from backend.app.models import game
+from backend.app.models import game, species, user
 from backend.scripts.seed_db import seed_animals
 
 

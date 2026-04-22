@@ -8,6 +8,7 @@ class GameSession(SQLModel, table=True):
     game_id: uuid.UUID = Field(
         default_factory=uuid.uuid4, primary_key=True
     ) 
+    user_id: uuid.UUID = Field(foreign_key="user.user_id")
     total_score: int = Field(default=0)
     is_active: bool = Field(default=True)
 

@@ -7,3 +7,4 @@ sqlmodel
 pytest
 httpx
 pandas
+"passlib[bcrypt]" PyJWT python-multipart
