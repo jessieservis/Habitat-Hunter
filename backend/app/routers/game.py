@@ -9,18 +9,21 @@ from backend.app.database.connection import get_db
 import uuid
 import random
 from backend.app.services.mapping import generate_comparison_map
+from backend.app.routers.auth import get_current_user
+from backend.app.models.user import UserPublic
 
 router = APIRouter(prefix="/game", tags=["Game"])
 
 
 @router.post("", status_code=201)
-def create_game_session(db: Session = Depends(get_db)):
+def create_game_session(
+    db: Session = Depends(get_db), current_user: UserPublic = Depends(get_current_user)
+):
     """
     Creates a new game session
     """
     # Create new game class
-    game = GameSession()
-
+    game = GameSession(user_id=current_user.user_id)
     # Save game to db
     db.add(game)
     db.commit()
@@ -34,6 +37,7 @@ def create_game_session(db: Session = Depends(get_db)):
 def start_round(
     game_id: uuid.UUID,
     db: Session = Depends(get_db),
+    current_user: UserPublic = Depends(get_current_user),
 ):
     """
     Starts a new round and assigns a mystery animal
@@ -88,6 +92,7 @@ def give_clue(
     game_id: uuid.UUID,
     round_id: uuid.UUID,
     db: Session = Depends(get_db),
+    current_user: UserPublic = Depends(get_current_user),
 ):
     """
     Gives a clue for the current animal
@@ -136,6 +141,7 @@ def make_guess(
     round_id: uuid.UUID,
     guess: str = Form(...),
     db: Session = Depends(get_db),
+    current_user: UserPublic = Depends(get_current_user),
 ):
     """
     Handles a user's guess for the current animal

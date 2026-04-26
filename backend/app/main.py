@@ -6,8 +6,11 @@ from sqlmodel import SQLModel, Session, select
 from backend.app.config.database import engine
 from backend.app.models import species
 from backend.app.models.species import Species
+from backend.app.routers import species as species_router
 from backend.app.routers import game as game_router
-from backend.app.models import game, species, user
+from backend.app.routers import auth as auth_router
+
+# from backend.app.models import game, species, user
 from backend.scripts.seed_db import seed_animals
 
 
@@ -36,9 +39,14 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-# Mount the /game routes
+# Add the game routes
 app.include_router(game_router.router)
 
+# Add auth routes
+app.include_router(auth_router.router)
+
+# Add species routes
+# app.include_router(species_router.router)
 
 @app.get("/")
 def read_root():
