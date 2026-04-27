@@ -59,7 +59,7 @@ export function logout() {
 export async function startNewRound() {
 	try {
 		if (!gameId) {
-			const gameRes = await fetch(`${API_BASE_URL}/game/`, {
+			const gameRes = await fetch(`${API_BASE_URL}/game`, {
 				method: 'POST',
 				headers: getAuthHeader(), // Attach token
 			})

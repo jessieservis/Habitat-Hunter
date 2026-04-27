@@ -5,9 +5,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from sqlmodel import SQLModel, Session, select
 from app.config.database import engine
-from app.models import species
 from app.models.species import Species
-from app.routers import species as species_router
 from app.routers import game as game_router
 from app.routers import auth as auth_router
 
@@ -46,8 +44,6 @@ app.include_router(game_router.router)
 # Add auth routes
 app.include_router(auth_router.router)
 
-# Add species routes
-# app.include_router(species_router.router)
 
 @app.get("/")
 def read_root():
