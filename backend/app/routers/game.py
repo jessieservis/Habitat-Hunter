@@ -178,7 +178,7 @@ def make_guess(
         score = max(100, 1000 - penalty)  # Minimum of 100 points if they get it right
 
     # Save round
-    round.is_completed = is_correct
+    round.is_completed = True
     round.score = score
     db.add(round)
     db.commit()
@@ -192,6 +192,8 @@ def make_guess(
         "score": score,
         "clues_used": round.clues_used,
         "map_image": map_base64,
+        "species_name": species.name,
+        "conservation_info": species.conservation_info,
         "message": (
             "Correct!"
             if is_correct

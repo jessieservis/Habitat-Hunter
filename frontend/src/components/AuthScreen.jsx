@@ -1,5 +1,7 @@
 import { useState } from 'react'
+import { motion } from 'motion/react'
 import { login, register } from '../services/api'
+import { Sparkles, AlertCircle } from 'lucide-react'
 
 export default function AuthScreen({ onAuthSuccess }) {
 	const [isLoginMode, setIsLoginMode] = useState(true)
@@ -16,96 +18,109 @@ export default function AuthScreen({ onAuthSuccess }) {
 		try {
 			if (isLoginMode) {
 				const result = await login(username, password)
-				if (result.success) {
-					onAuthSuccess()
-				} else {
-					setError(result.message)
-				}
+				if (result.success) onAuthSuccess()
+				else setError(result.message)
 			} else {
 				const result = await register(username, password)
 				if (result.success) {
 					await login(username, password)
 					onAuthSuccess()
-				} else {
-					setError(result.message)
-				}
+				} else setError(result.message)
 			}
 		} catch (err) {
-			setError('A network error occurred. Is your backend running?')
+			setError('A network error occurred.')
 		} finally {
 			setLoading(false)
 		}
 	}
 
 	return (
-		<div className='flex items-center justify-center min-h-screen bg-gray-50 px-4'>
-			<div className='w-full max-w-md p-8 space-y-6 bg-white rounded-2xl shadow-xl'>
-				<div className='text-center'>
-					<h2 className='text-3xl font-extrabold text-gray-900'>
-						{isLoginMode ? 'Welcome Back' : 'Create Account'}
+		<div className='relative min-h-screen flex items-center justify-center overflow-hidden p-6'>
+			<div className='absolute inset-0 bg-gradient-to-br from-[#0a2e1f] via-[#1a4d2e] to-[#0d1f16]' />
+			<div
+				className='absolute inset-0 opacity-[0.03] mix-blend-overlay'
+				style={{
+					backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' /%3E%3C/svg%3E")`,
+					backgroundRepeat: 'repeat',
+				}}
+			/>
+
+			<motion.div
+				initial={{ opacity: 0, y: 20 }}
+				animate={{ opacity: 1, y: 0 }}
+				className='relative z-10 w-full max-w-md p-8 rounded-3xl bg-[#235a38]/40 backdrop-blur-md border border-[#4ecdc4]/20 shadow-2xl'
+			>
+				<div className='text-center mb-8'>
+					<h2
+						className='text-4xl font-bold text-[#4ecdc4] mb-2'
+						style={{ fontFamily: "'Fredoka', sans-serif" }}
+					>
+						{isLoginMode ? 'Welcome Back' : 'Join the Hunt'}
 					</h2>
-					<p className='mt-2 text-sm text-gray-600'>
+					<p
+						className='text-[#a8e6cf]'
+						style={{ fontFamily: "'DM Sans', sans-serif" }}
+					>
 						{isLoginMode
-							? 'Sign in to continue hunting'
-							: 'Join the Habitat Hunter community'}
+							? 'Sign in to track habitats'
+							: 'Create an account to begin'}
 					</p>
 				</div>
 
 				{error && (
-					<div
-						className='p-4 text-sm text-red-700 bg-red-100 rounded-lg border border-red-200'
-						role='alert'
-					>
-						{error}
+					<div className='mb-6 p-4 rounded-xl bg-[#ff6b35]/20 border border-[#ff6b35]/40 flex items-center gap-3'>
+						<AlertCircle className='w-5 h-5 text-[#ff6b35]' />
+						<p className='text-[#ff6b35] text-sm'>{error}</p>
 					</div>
 				)}
 
 				<form
 					onSubmit={handleSubmit}
-					className='space-y-5'
+					className='space-y-4'
 				>
-					<div>
-						<input
-							type='text'
-							placeholder='Username'
-							value={username}
-							onChange={(e) => setUsername(e.target.value)}
-							required
-							minLength={3}
-							className='w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition-colors duration-200'
-						/>
-					</div>
-					<div>
-						<input
-							type='password'
-							placeholder='Password'
-							value={password}
-							onChange={(e) => setPassword(e.target.value)}
-							required
-							minLength={6}
-							className='w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition-colors duration-200'
-						/>
-					</div>
-					<button
+					<input
+						type='text'
+						placeholder='Username'
+						value={username}
+						onChange={(e) => setUsername(e.target.value)}
+						required
+						minLength={3}
+						className='w-full px-6 py-4 rounded-xl bg-[#0d1f16]/50 border border-[#4ecdc4]/20 text-[#e8f5e9] placeholder:text-[#6b9080] focus:border-[#4ecdc4] focus:outline-none transition-all'
+						style={{ fontFamily: "'DM Sans', sans-serif" }}
+					/>
+					<input
+						type='password'
+						placeholder='Password'
+						value={password}
+						onChange={(e) => setPassword(e.target.value)}
+						required
+						minLength={6}
+						className='w-full px-6 py-4 rounded-xl bg-[#0d1f16]/50 border border-[#4ecdc4]/20 text-[#e8f5e9] placeholder:text-[#6b9080] focus:border-[#4ecdc4] focus:outline-none transition-all'
+						style={{ fontFamily: "'DM Sans', sans-serif" }}
+					/>
+					<motion.button
+						whileHover={{ scale: 1.02 }}
+						whileTap={{ scale: 0.98 }}
 						type='submit'
 						disabled={loading}
-						className='w-full py-3 px-4 font-bold text-white bg-green-600 rounded-xl hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-md'
+						className='w-full py-4 mt-4 rounded-xl bg-gradient-to-br from-[#4ecdc4] to-[#44a89e] text-[#0a2e1f] font-bold flex justify-center items-center gap-2 disabled:opacity-50'
+						style={{ fontFamily: "'Fredoka', sans-serif", fontSize: '1.1rem' }}
 					>
+						<Sparkles className='w-5 h-5' />
 						{loading ? 'Processing...' : isLoginMode ? 'Login' : 'Register'}
-					</button>
+					</motion.button>
 				</form>
 
-				<div className='text-center mt-6'>
-					<button
-						onClick={() => setIsLoginMode(!isLoginMode)}
-						className='text-sm font-semibold text-green-600 hover:text-green-500 hover:underline transition-colors focus:outline-none'
-					>
-						{isLoginMode
-							? "Don't have an account? Register here."
-							: 'Already have an account? Login here.'}
-					</button>
-				</div>
-			</div>
+				<button
+					onClick={() => setIsLoginMode(!isLoginMode)}
+					className='w-full mt-6 text-[#a8e6cf] hover:text-[#ffd93d] transition-colors text-sm'
+					style={{ fontFamily: "'DM Sans', sans-serif" }}
+				>
+					{isLoginMode
+						? "Don't have an account? Register here"
+						: 'Already have an account? Login here'}
+				</button>
+			</motion.div>
 		</div>
 	)
 }

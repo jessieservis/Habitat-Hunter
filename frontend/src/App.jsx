@@ -2,7 +2,7 @@ import { useState } from 'react'
 import StartScreen from './components/StartScreen'
 import ActiveRound from './components/ActiveRound'
 import RoundResult from './components/RoundResult'
-import AuthScreen from './components/AuthScreen' // Import the new Auth screen
+import AuthScreen from './components/AuthScreen'
 import { logout } from './services/api'
 
 function App() {
@@ -28,44 +28,31 @@ function App() {
 
 	const handleNextRound = () => setCurrentScreen('playing')
 
-	// Traffic Cop Logic
 	if (!isAuthenticated) {
 		return <AuthScreen onAuthSuccess={() => setIsAuthenticated(true)} />
 	}
 
 	return (
-		<div className='min-h-screen bg-gray-50 font-sans text-gray-900 flex flex-col'>
-			<header className='bg-white shadow-sm border-b border-gray-200'>
-				<div className='max-w-5xl mx-auto px-4 h-16 flex items-center justify-between'>
-					<div className='flex items-center gap-2'>
-						<span className='text-2xl font-black text-green-700 tracking-tight'>
-							Habitat
-						</span>
-						<span className='text-2xl font-light text-gray-500 tracking-tight'>
-							Hunter
-						</span>
-					</div>
-					<button
-						onClick={handleLogout}
-						className='text-sm font-medium text-gray-500 hover:text-gray-800 transition-colors'
-					>
-						Sign Out
-					</button>
-				</div>
-			</header>
+		<div className='relative min-h-screen bg-[#0a2e1f] font-sans'>
+			{/* Optional: A simple logout button layered over the game screens */}
+			<button
+				onClick={handleLogout}
+				className='absolute top-4 right-4 z-50 px-4 py-2 rounded-lg bg-[#0d1f16]/60 backdrop-blur-md border border-[#4ecdc4]/20 text-[#a8e6cf] hover:text-[#ffd93d] text-sm transition-colors'
+				style={{ fontFamily: "'DM Sans', sans-serif" }}
+			>
+				Sign Out
+			</button>
 
-			<main className='flex-1 max-w-5xl mx-auto w-full px-4 py-8'>
-				{currentScreen === 'start' && <StartScreen onStart={handleStartGame} />}
-				{currentScreen === 'playing' && (
-					<ActiveRound onGuessResult={handleGuessResult} />
-				)}
-				{currentScreen === 'result' && (
-					<RoundResult
-						result={resultData}
-						onNextRound={handleNextRound}
-					/>
-				)}
-			</main>
+			{currentScreen === 'start' && <StartScreen onStart={handleStartGame} />}
+			{currentScreen === 'playing' && (
+				<ActiveRound onGuessResult={handleGuessResult} />
+			)}
+			{currentScreen === 'result' && (
+				<RoundResult
+					result={resultData}
+					onNextRound={handleNextRound}
+				/>
+			)}
 		</div>
 	)
 }
