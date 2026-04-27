@@ -2,6 +2,7 @@
 
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from sqlmodel import SQLModel, Session, select
 from app.config.database import engine
 from app.models import species
@@ -51,3 +52,16 @@ app.include_router(auth_router.router)
 @app.get("/")
 def read_root():
     return {"message": "Habitat Hunter API is running"}
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",  # Allow 5173 frontend to send requests to backend
+        "http://localhost:5174",  # Sometimes Vite bumps to 5174 if 5173 is busy
+        "http://127.0.0.1:5174",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],  # The '*' here is what specifically allows the OPTIONS method
+    allow_headers=["*"],
+)
