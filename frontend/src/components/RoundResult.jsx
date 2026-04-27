@@ -1,10 +1,33 @@
 import { motion } from 'motion/react';
 import { Trophy, MapPin, RotateCcw, CheckCircle, XCircle } from 'lucide-react';
+import { useLocation, useNavigate, Navigate } from 'react-router-dom'
 
-export default function RoundResult({ result, onNextRound }) {
-  const { correct, speciesName, location, conservationStatus, population, threats, mapImage, cluesUsed, score } = result;
+export default function RoundResult() {
+	const navigate = useNavigate()
+	const routeLocation = useLocation()
+	const result = routeLocation.state?.result
 
-  return (
+	// If they try to manually type /result without playing, kick them to the start screen
+	if (!result)
+		return (
+			<Navigate
+				to='/'
+				replace
+			/>
+		)
+	const {
+		correct,
+		speciesName,
+		location,
+		conservationStatus,
+		population,
+		threats,
+		mapImage,
+		cluesUsed,
+		score,
+	} = result
+
+	return (
 		<div className='relative min-h-screen flex items-center justify-center overflow-hidden p-6'>
 			{/* Background */}
 			<div className='absolute inset-0 bg-gradient-to-br from-[#0a2e1f] via-[#1a4d2e] to-[#0d1f16]' />
@@ -252,7 +275,7 @@ export default function RoundResult({ result, onNextRound }) {
 					transition={{ delay: 1 }}
 					whileHover={{ scale: 1.05, y: -2 }}
 					whileTap={{ scale: 0.98 }}
-					onClick={onNextRound}
+					onClick={() => navigate('/play')}
 					className='group relative px-10 py-5 rounded-2xl overflow-hidden'
 					style={{
 						fontFamily: "'Fredoka', sans-serif",

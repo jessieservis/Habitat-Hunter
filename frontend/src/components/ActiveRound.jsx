@@ -2,8 +2,10 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
 import { Lightbulb, Send, Plus, AlertCircle } from 'lucide-react'
 import { startNewRound, getNextClue, submitGuess } from '../services/api'
+import { useNavigate } from 'react-router-dom'
 
-export default function ActiveRound({ onGuessResult }) {
+export default function ActiveRound() {
+	const navigate = useNavigate()
 	const [guess, setGuess] = useState('')
 	const [clues, setClues] = useState([])
 	const [loading, setLoading] = useState(true)
@@ -32,7 +34,7 @@ export default function ActiveRound({ onGuessResult }) {
 			setGuessLoading(true)
 			const result = await submitGuess(guess)
 			if (result.success) {
-				onGuessResult(result)
+				Maps('/result', { state: { result } })
 			} else {
 				setError('Failed to submit guess. Try again.')
 				setGuessLoading(false)

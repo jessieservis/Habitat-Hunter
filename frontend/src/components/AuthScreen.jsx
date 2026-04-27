@@ -2,8 +2,10 @@ import { useState } from 'react'
 import { motion } from 'motion/react'
 import { login, register } from '../services/api'
 import { Sparkles, AlertCircle } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 
-export default function AuthScreen({ onAuthSuccess }) {
+export default function AuthScreen() {
+	const navigate = useNavigate()
 	const [isLoginMode, setIsLoginMode] = useState(true)
 	const [username, setUsername] = useState('')
 	const [password, setPassword] = useState('')
@@ -18,13 +20,13 @@ export default function AuthScreen({ onAuthSuccess }) {
 		try {
 			if (isLoginMode) {
 				const result = await login(username, password)
-				if (result.success) onAuthSuccess()
+				if (result.success) Maps('/')
 				else setError(result.message)
 			} else {
 				const result = await register(username, password)
 				if (result.success) {
 					await login(username, password)
-					onAuthSuccess()
+					Maps('/')
 				} else setError(result.message)
 			}
 		} catch (err) {

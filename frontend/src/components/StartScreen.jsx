@@ -1,8 +1,10 @@
 import { motion } from 'motion/react';
 import { Sparkles } from 'lucide-react';
+import { useNavigate } from 'react-router-dom'
 
-export default function StartScreen({ onStart }) {
-  return (
+export default function StartScreen() {
+	const navigate = useNavigate()
+	return (
 		<div className='relative min-h-screen flex items-center justify-center overflow-hidden'>
 			{/* Organic background with gradient and texture */}
 			<div className='absolute inset-0 bg-gradient-to-br from-[#0a2e1f] via-[#1a4d2e] to-[#0d1f16]' />
@@ -112,7 +114,7 @@ export default function StartScreen({ onStart }) {
 					transition={{ duration: 0.8, delay: 0.7 }}
 					whileHover={{ scale: 1.05, y: -2 }}
 					whileTap={{ scale: 0.98 }}
-					onClick={onStart}
+					onClick={() => navigate('/play')}
 					className='group relative px-12 py-5 rounded-2xl overflow-hidden'
 					style={{
 						fontFamily: "'Fredoka', sans-serif",
