@@ -1,104 +1,72 @@
-import { useCallback, useState } from 'react'
+import { useState } from 'react'
+import StartScreen from './components/StartScreen'
 import ActiveRound from './components/ActiveRound'
 import RoundResult from './components/RoundResult'
-import StartScreen from './components/StartScreen'
-import { getNextClue, startNewRound, submitGuess } from './services/api'
-
-const STAGES = {
-	start: 'start',
-	active: 'active',
-	result: 'result',
-}
+import AuthScreen from './components/AuthScreen' // Import the new Auth screen
+import { logout } from './services/api'
 
 function App() {
-	const [stage, setStage] = useState(STAGES.start)
-	const [round, setRound] = useState(null)
-	const [result, setResult] = useState(null)
-	const [loading, setLoading] = useState(false)
-
-	const beginRound = useCallback(async () => {
-		if (loading) {
-			return
-		}
-		setLoading(true)
-		const response = await startNewRound()
-		setLoading(false)
-
-		if (!response?.success) {
-			return
-		}
-
-		setRound({
-			currentClue: response.clue,
-			clueNumber: response.clueNumber,
-			totalClues: response.totalClues,
-		})
-		setResult(null)
-		setStage(STAGES.active)
-	}, [loading])
-
-	const handleGetClue = useCallback(async () => {
-		if (loading) {
-			return null
-		}
-		setLoading(true)
-		const response = await getNextClue()
-		setLoading(false)
-
-		if (!response?.success) {
-			return null
-		}
-
-		setRound((prev) => ({
-			...prev,
-			currentClue: response.clue,
-			clueNumber: response.clueNumber,
-			totalClues: response.totalClues,
-		}))
-
-		return response.clue
-	}, [loading])
-
-	const handleGuess = useCallback(
-		async (guess) => {
-			if (loading) {
-				return
-			}
-			setLoading(true)
-			const response = await submitGuess(guess)
-			setLoading(false)
-
-			if (!response?.success) {
-				return
-			}
-
-			setResult(response)
-			setStage(STAGES.result)
-		},
-		[loading],
+	// Check if user is logged in
+	const [isAuthenticated, setIsAuthenticated] = useState(
+		!!localStorage.getItem('token'),
 	)
+	const [currentScreen, setCurrentScreen] = useState('start')
+	const [resultData, setResultData] = useState(null)
 
-	const handleNextRound = useCallback(async () => {
-		await beginRound()
-	}, [beginRound])
+	const handleLogout = () => {
+		logout()
+		setIsAuthenticated(false)
+		setCurrentScreen('start')
+	}
+
+	const handleStartGame = () => setCurrentScreen('playing')
+
+	const handleGuessResult = (result) => {
+		setResultData(result)
+		setCurrentScreen('result')
+	}
+
+	const handleNextRound = () => setCurrentScreen('playing')
+
+	// Traffic Cop Logic
+	if (!isAuthenticated) {
+		return <AuthScreen onAuthSuccess={() => setIsAuthenticated(true)} />
+	}
 
 	return (
-		<>
-			{stage === STAGES.start && <StartScreen onStart={beginRound} />}
-			{stage === STAGES.active && round && (
-				<ActiveRound
-					currentClue={round.currentClue}
-					clueNumber={round.clueNumber}
-					totalClues={round.totalClues}
-					onGuess={handleGuess}
-					onGetClue={handleGetClue}
-					loading={loading}
-				/>
-			)}
-			{stage === STAGES.result && result && (
-				<RoundResult result={result} onNextRound={handleNextRound} />
-			)}
-		</>
+		<div className='min-h-screen bg-gray-50 font-sans text-gray-900 flex flex-col'>
+			<header className='bg-white shadow-sm border-b border-gray-200'>
+				<div className='max-w-5xl mx-auto px-4 h-16 flex items-center justify-between'>
+					<div className='flex items-center gap-2'>
+						<span className='text-2xl font-black text-green-700 tracking-tight'>
+							Habitat
+						</span>
+						<span className='text-2xl font-light text-gray-500 tracking-tight'>
+							Hunter
+						</span>
+					</div>
+					<button
+						onClick={handleLogout}
+						className='text-sm font-medium text-gray-500 hover:text-gray-800 transition-colors'
+					>
+						Sign Out
+					</button>
+				</div>
+			</header>
+
+			<main className='flex-1 max-w-5xl mx-auto w-full px-4 py-8'>
+				{currentScreen === 'start' && <StartScreen onStart={handleStartGame} />}
+				{currentScreen === 'playing' && (
+					<ActiveRound onGuessResult={handleGuessResult} />
+				)}
+				{currentScreen === 'result' && (
+					<RoundResult
+						result={resultData}
+						onNextRound={handleNextRound}
+					/>
+				)}
+			</main>
+		</div>
 	)
 }
 
