@@ -11,6 +11,21 @@ function getAuthHeader() {
 	return token ? { Authorization: `Bearer ${token}` } : {}
 }
 
+// Internal helper to handle common error states like 401 Unauthorized
+async function handleResponse(response) {
+    if (response.status === 401) {
+        // Token is invalid, expired, or missing
+        localStorage.removeItem("token");
+        gameId = null;
+        roundId = null;
+        
+        // Force redirect to login page
+        window.location.href = "/login";
+        return null;
+    }
+    return response;
+}
+
 // --- AUTHENTICATION ROUTES ---
 
 export async function register(username, password) {
@@ -59,22 +74,25 @@ export function logout() {
 export async function startNewRound() {
 	try {
 		if (!gameId) {
-			const gameRes = await fetch(`${API_BASE_URL}/game`, {
+			const res = await fetch(`${API_BASE_URL}/game`, {
 				method: 'POST',
-				headers: getAuthHeader(), // Attach token
+				headers: getAuthHeader(),
 			})
-			if (!gameRes.ok) return { success: false }
-			const gameData = await gameRes.json()
-			gameId = gameData.game_id // Match your backend's exact response key
+			const handled = await handleResponse(res)
+			if (!handled || !handled.ok) return { success: false }
+
+			const gameData = await handled.json()
+			gameId = gameData.game_id
 		}
 
 		const roundRes = await fetch(`${API_BASE_URL}/game/${gameId}/round`, {
 			method: 'POST',
-			headers: getAuthHeader(), // Attach token
+			headers: getAuthHeader(),
 		})
-		if (!roundRes.ok) return { success: false }
+		const handledRound = await handleResponse(roundRes)
+		if (!handledRound || !handledRound.ok) return { success: false }
 
-		const roundData = await roundRes.json()
+		const roundData = await handledRound.json()
 		roundId = roundData.round_id
 		currentClueNumber = 0
 
@@ -88,11 +106,13 @@ export async function startNewRound() {
 export async function getNextClue() {
 	try {
 		const res = await fetch(`${API_BASE_URL}/game/${gameId}/${roundId}/clue`, {
-			headers: getAuthHeader(), // Attach token
+			headers: getAuthHeader(),
 		})
-		if (!res.ok) return { success: false, message: 'No more clues available' }
+		const handled = await handleResponse(res)
+		if (!handled || !handled.ok)
+			return { success: false, message: 'No more clues available' }
 
-		const data = await res.json()
+		const data = await handled.json()
 		currentClueNumber++
 
 		return {

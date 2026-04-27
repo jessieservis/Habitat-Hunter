@@ -20,17 +20,18 @@ export default function AuthScreen() {
 		try {
 			if (isLoginMode) {
 				const result = await login(username, password)
-				if (result.success) Maps('/')
+				if (result.success) navigate('/')
 				else setError(result.message)
 			} else {
 				const result = await register(username, password)
 				if (result.success) {
 					await login(username, password)
-					Maps('/')
+					navigate('/')
 				} else setError(result.message)
 			}
 		} catch (err) {
-			setError('A network error occurred.')
+			if (err instanceof TypeError) setError('A network error occurred.')
+			else setError('An unexpected error occurred. Please try again.')
 		} finally {
 			setLoading(false)
 		}

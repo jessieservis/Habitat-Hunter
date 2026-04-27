@@ -12,14 +12,19 @@ import { logout } from './services/api'
 
 // Security wrapper that forces unauthenticated users back to login
 const ProtectedRoute = ({ children }) => {
-	return localStorage.getItem('token') ? (
-		children
-	) : (
-		<Navigate
-			to='/login'
-			replace
-		/>
-	)
+	const token = localStorage.getItem('token')
+
+	if (!token) {
+		// replace=true prevents the user from hitting "back" to return to the locked page
+		return (
+			<Navigate
+				to='/login'
+				replace
+			/>
+		)
+	}
+
+	return children
 }
 
 export default function App() {
@@ -67,6 +72,16 @@ export default function App() {
 							<ProtectedRoute>
 								<RoundResult />
 							</ProtectedRoute>
+						}
+					/>
+					{/* Catch-all: Redirect any unknown routes to home */}
+					<Route
+						path='*'
+						element={
+							<Navigate
+								to='/'
+								replace
+							/>
 						}
 					/>
 				</Routes>

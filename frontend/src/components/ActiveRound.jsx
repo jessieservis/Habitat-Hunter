@@ -34,7 +34,7 @@ export default function ActiveRound() {
 			setGuessLoading(true)
 			const result = await submitGuess(guess)
 			if (result.success) {
-				Maps('/result', { state: { result } })
+				navigate('/result', { state: { result } })
 			} else {
 				setError('Failed to submit guess. Try again.')
 				setGuessLoading(false)
