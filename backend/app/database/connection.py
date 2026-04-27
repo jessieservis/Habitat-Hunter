@@ -1,5 +1,5 @@
 from sqlmodel import Session
-from backend.app.config.database import engine
+from app.config.database import engine
 
 
 def get_db():

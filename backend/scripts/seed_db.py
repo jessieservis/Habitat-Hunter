@@ -1,6 +1,6 @@
 from sqlmodel import Session
-from backend.app.config.database import engine
-from backend.app.models.species import Species
+from app.config.database import engine
+from app.models.species import Species
 
 
 def seed_animals():
