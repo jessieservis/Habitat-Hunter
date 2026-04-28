@@ -1,3 +1,5 @@
+"""Models for species data, using SQLModel for database mapping"""
+
 from sqlmodel import SQLModel, Field, Column, JSON
 from typing import List
 

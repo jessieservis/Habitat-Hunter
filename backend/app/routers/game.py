@@ -1,4 +1,4 @@
-"""Routes for the game API."""
+"""Routes for the game API"""
 
 from fastapi import APIRouter, Depends, Form
 from sqlmodel import Session

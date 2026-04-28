@@ -1,3 +1,5 @@
+"""Models for game sessions and rounds, using SQLModel for database mapping"""
+
 import uuid
 from typing import Optional
 from sqlmodel import Field, SQLModel

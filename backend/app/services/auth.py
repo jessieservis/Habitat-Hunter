@@ -1,3 +1,5 @@
+"""Authentication helpers used by the auth router"""
+
 import os
 from datetime import datetime, timedelta, timezone
 from jose import JWTError, jwt

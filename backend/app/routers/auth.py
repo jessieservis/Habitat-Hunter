@@ -1,4 +1,4 @@
-"""Routes for user authentication and token management."""
+"""Routes for user authentication and token management"""
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
@@ -20,7 +20,8 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/token")
 def get_current_user(
     token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)
 ) -> UserPublic:
-    """Dependency: validate the Bearer token and return the current user.
+    """
+    Dependency: validate the Bearer token and return the current user.
     Raise 401 if the token is missing, expired, or tampered with.
     """
     credentials_exception = HTTPException(
@@ -52,6 +53,7 @@ def register(user_data: UserCreate, db: Session = Depends(get_db)):
             detail="Username already taken",
         )
 
+    # Hash the password and create the user record
     hashed = hash_password(user_data.password)
     new_user = User(username=user_data.username, hashed_password=hashed)
     db.add(new_user)
@@ -74,5 +76,6 @@ def login(
             headers={"WWW-Authenticate": "Bearer"},
         )
 
+    # Create JWT token with username as subject
     token = create_access_token(data={"sub": user.username})
     return TokenResponse(access_token=token, token_type="bearer")

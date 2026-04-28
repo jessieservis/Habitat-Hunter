@@ -1,10 +1,8 @@
-"""Scoring helpers for Habitat Hunter."""
-
+"""Scoring helpers used by the game router"""
 
 BASE_SCORE = 1000
 CLUE_PENALTY = 200
 MINIMUM_SCORE = 100
-
 
 def normalize_location(value: str) -> str:
     # Normalize free-text location input for comparison

@@ -1,3 +1,5 @@
+"""Database connection and session management"""
+
 from sqlmodel import Session
 from app.config.database import engine
 

@@ -1,3 +1,5 @@
+"""Models for user data, using SQLModel for database mapping"""
+
 import uuid
 from sqlmodel import Field, SQLModel
 from pydantic import BaseModel

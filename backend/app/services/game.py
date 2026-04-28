@@ -1,4 +1,4 @@
-"""Shared game flow helpers for Habitat Hunter."""
+"""Shared game flow helpers used by the game router"""
 
 import random
 import uuid

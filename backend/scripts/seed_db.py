@@ -1,3 +1,5 @@
+"""Script to seed the database with initial mock data for species"""
+
 from sqlmodel import Session
 from app.config.database import engine
 from app.models.species import Species
