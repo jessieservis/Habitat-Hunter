@@ -18,7 +18,7 @@ async def lifespan(app: FastAPI):
     # Startup: create tables
     SQLModel.metadata.create_all(bind=engine)
 
-    # Check if the database is empty, if so, initialize it with mock animals
+    # Check if the database is empty, if it is then initialize it with mock animals
     with Session(engine) as session:
         # Query for the first species. if nothing comes back, the table is empty
         existing_data = session.exec(select(Species)).first()

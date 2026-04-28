@@ -3,8 +3,9 @@ from typing import List
 
 
 class Species(SQLModel, table=True):
+    # Tracks the species data for the game
     species_id: str = Field(primary_key=True)
     name: str
     location: str
-    clues: List[str] = Field(sa_column=Column(JSON))  # SQLAlchemy column
+    clues: List[str] = Field(sa_column=Column(JSON))
     conservation_info: str

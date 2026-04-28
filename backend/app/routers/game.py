@@ -2,7 +2,6 @@
 
 from fastapi import APIRouter, Depends, Form, HTTPException
 from sqlmodel import Session, select
-from app.models import species
 from app.models.game import GameSession, GameRound
 from app.models.species import Species
 from app.database.connection import get_db

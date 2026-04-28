@@ -30,7 +30,7 @@ def generate_comparison_map(guessed_country: str, actual_country: str) -> str:
             "Actual Location": "green",
             "Your Guess": "red",
         },
-        title="Habitat Comparison",
+        title="Your Guess vs Actual Location",
         projection="natural earth",  # Gives the map a nice rounded globe look
     )
 

@@ -194,7 +194,7 @@ export default function ActiveRound() {
 								type='text'
 								value={guess}
 								onChange={(e) => setGuess(e.target.value)}
-								placeholder='Where does this animal live?'
+								placeholder='Where do I live?'
 								disabled={guessLoading}
 								className='w-full px-6 py-5 rounded-2xl bg-[#1a4d2e]/60 backdrop-blur-md border-2 border-[#4ecdc4]/30 text-[#e8f5e9] placeholder:text-[#6b9080] focus:border-[#4ecdc4] focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed transition-all'
 								style={{
