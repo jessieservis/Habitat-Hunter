@@ -1,3 +1,5 @@
+"""Mapping helpers used by the game router"""
+
 import plotly.express as px
 import pandas as pd
 import base64
@@ -8,6 +10,9 @@ def generate_comparison_map(guessed_country: str, actual_country: str) -> str:
     Generates a choropleth map comparing the guessed location to the actual location.
     Returns the map as a Base64 encoded PNG string.
     """
+    if not guessed_country.strip():
+        raise ValueError("guessed country cannot be empty")
+
     # 1. Handle correct vs. incorrect guesses
     if guessed_country.lower() == actual_country.lower():
         data = {"Country": [actual_country.title()], "Status": ["Correct Location"]}
