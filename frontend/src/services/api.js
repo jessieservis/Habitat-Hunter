@@ -151,6 +151,7 @@ export async function submitGuess(guess) {
 			mapImage: `data:image/png;base64,${data.map_image}`,
 			cluesUsed: data.clues_used,
 			score: data.score,
+			total_score: data.total_score,
 		}
 	} catch (error) {
 		return { success: false }

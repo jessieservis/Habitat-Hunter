@@ -1,6 +1,6 @@
 """Scoring helpers used by the game router"""
 
-BASE_SCORE = 1000
+BASE_SCORE = 1200
 CLUE_PENALTY = 200
 MINIMUM_SCORE = 100
 

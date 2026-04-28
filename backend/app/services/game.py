@@ -125,6 +125,7 @@ def submit_guess_for_round(
     # Save round
     round.is_completed = True
     round.score = score
+    game.total_score += score
     db.add(round)
     db.commit()
 
@@ -135,6 +136,7 @@ def submit_guess_for_round(
         "correct": is_correct,
         "location": species.location,
         "score": score,
+        "total_score": game.total_score,
         "clues_used": round.clues_used,
         "map_image": map_base64,
         "species_name": species.name,

@@ -25,6 +25,7 @@ export default function RoundResult() {
 		mapImage,
 		cluesUsed,
 		score,
+		total_score,
 	} = result
 
 	return (
@@ -154,6 +155,15 @@ export default function RoundResult() {
 					transition={{ delay: 0.5 }}
 					className='mb-8 flex justify-center gap-8'
 				>
+					<span
+						className='text-[#6b9080]'
+						style={{
+							fontFamily: "'DM Sans', sans-serif",
+							fontSize: '0.9rem',
+						}}
+					>
+						Round Score:
+					</span>
 					<div className='flex flex-col items-center gap-2'>
 						<div className='flex items-center gap-2 text-[#ffd93d]'>
 							<Trophy className='w-6 h-6' />
@@ -167,15 +177,29 @@ export default function RoundResult() {
 								{score}
 							</span>
 						</div>
-						<span
-							className='text-[#6b9080]'
-							style={{
-								fontFamily: "'DM Sans', sans-serif",
-								fontSize: '0.9rem',
-							}}
-						>
-							Points
-						</span>
+					</div>
+					<span
+						className='text-[#6b9080]'
+						style={{
+							fontFamily: "'DM Sans', sans-serif",
+							fontSize: '0.9rem',
+						}}
+					>
+						Total Score:
+					</span>
+					<div className='flex flex-col items-center gap-2'>
+						<div className='flex items-center gap-2 text-[#ffd93d]'>
+							<Trophy className='w-6 h-6' />
+							<span
+								style={{
+									fontFamily: "'Fredoka', sans-serif",
+									fontSize: '2rem',
+									fontWeight: 700,
+								}}
+							>
+								{total_score}
+							</span>
+						</div>
 					</div>
 
 					<div className='w-px bg-[#4ecdc4]/20' />
