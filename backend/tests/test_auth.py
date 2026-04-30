@@ -1,4 +1,15 @@
 """Tests for the authentication routes"""
+from datetime import timedelta
+
+from app.services.auth import create_access_token, decode_access_token
+
+
+def test_expired_token_is_invalid():
+    # Create a token that expired in the past
+    token = create_access_token(
+        {"sub": "expired_user"}, expires_delta=timedelta(seconds=-1)
+    )
+    assert decode_access_token(token) is None
 
 
 def test_register_creates_user(client):

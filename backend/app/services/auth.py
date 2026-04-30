@@ -5,7 +5,17 @@ from datetime import datetime, timedelta, timezone
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 
-SECRET_KEY = os.getenv("JWT_SECRET_KEY", "change_this_in_production")
+DEFAULT_SECRET = "change_this_in_production"
+SECRET_KEY = os.getenv("JWT_SECRET_KEY", DEFAULT_SECRET)
+
+import warnings
+
+if SECRET_KEY == DEFAULT_SECRET:
+    warnings.warn(
+        "JWT_SECRET_KEY is not set. Using default insecure key. "
+        "Set JWT_SECRET_KEY environment variable in production (see README).",
+        UserWarning,
+    )
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
