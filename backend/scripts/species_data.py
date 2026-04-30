@@ -522,19 +522,6 @@ MOCK_SPECIES = [
         "conservation_info": "Critically Endangered (Population: Declining rapidly). They are the most illegally trafficked wild mammal on the planet, hunted entirely for their scales and meat. To help, international trade bans are being implemented and sniffer dogs are utilized at borders to intercept traffickers.",
     },
     {
-        "species_id": "blue-whale",
-        "name": "Blue Whale",
-        "location": "Antarctica",
-        "clues": [
-            "I am the loudest animal on the planet.",
-            "I filter my food through bristly baleen plates instead of teeth.",
-            "My tongue alone weighs as much as an African elephant.",
-            "I feed almost exclusively on massive swarms of tiny, shrimp-like krill.",
-            "I am the largest animal known to have ever existed, swimming the freezing waters of Antarctica.",
-        ],
-        "conservation_info": "Endangered (Population: 10,000 - 25,000). They face fatal strikes from massive commercial shipping vessels and climate change altering krill distribution. To help, organizations are working with the shipping industry to modify routes and enforce speed limits in critical whale habitats.",
-    },
-    {
         "species_id": "asian-elephant",
         "name": "Asian Elephant",
         "location": "India",

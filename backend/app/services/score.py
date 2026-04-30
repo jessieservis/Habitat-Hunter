@@ -13,12 +13,11 @@ def normalize_location(value: str) -> str:
 
 
 def calculate_score(
-	is_correct: bool,
-	clues_used: int,
-	*,
-	base_score: int = BASE_SCORE,
-	clue_penalty: int = CLUE_PENALTY,
-	minimum_score: int = MINIMUM_SCORE,
+    is_correct: bool,
+    clues_used: int,
+    base_score: int = BASE_SCORE,
+    clue_penalty: int = CLUE_PENALTY,
+    minimum_score: int = MINIMUM_SCORE,
 ) -> int:
     # Calculate the final score for a guess
     if clues_used < 0:
