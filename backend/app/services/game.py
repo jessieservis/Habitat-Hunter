@@ -12,11 +12,7 @@ from app.services.score import evaluate_guess
 
 def start_round_for_game(db: Session, game_id: uuid.UUID) -> GameRound:
     # Ensure the game session exists and is active
-    game = db.get(GameSession, game_id)
-    if not game:
-        raise HTTPException(status_code=404, detail="Game session not found")
-    if game.is_active is False:
-        raise HTTPException(status_code=400, detail="Game session is not active")
+    game = ensure_game_exists_and_active(db, game_id)
 
     # Get all species IDs that have already been played in this specific game
     played_rounds = db.exec(select(GameRound).where(GameRound.game_id == game_id)).all()
@@ -53,21 +49,9 @@ def start_round_for_game(db: Session, game_id: uuid.UUID) -> GameRound:
 
 
 def get_next_clue_for_round(db: Session, game_id: uuid.UUID, round_id: uuid.UUID) -> str:
-    # Ensure the game session exists and is active
-    game = db.get(GameSession, game_id)
-    if not game:
-        raise HTTPException(status_code=404, detail="Game session not found")
-    if game.is_active is False:
-        raise HTTPException(status_code=400, detail="Game session is not active")
-
-    # Ensure the round exists and belongs to the game session
-    round = db.get(GameRound, round_id)
-    if not round:
-        raise HTTPException(status_code=404, detail="Round not found")
-    if round.game_id != game_id:
-        raise HTTPException(
-            status_code=400, detail="Round does not belong to this game session"
-        )
+    # Ensure the game session exists and is active, and that the round belongs to it
+    game = ensure_game_exists_and_active(db, game_id)
+    round = ensure_round_belongs(db, game_id, round_id)
 
     # Give a clue
     species = db.get(Species, round.species_id)
@@ -95,21 +79,9 @@ def submit_guess_for_round(
     round_id: uuid.UUID,
     guess: str,
 ) -> dict[str, object]:
-    # Ensure the game session exists and is active
-    game = db.get(GameSession, game_id)
-    if not game:
-        raise HTTPException(status_code=404, detail="Game session not found")
-    if game.is_active is False:
-        raise HTTPException(status_code=400, detail="Game session is not active")
-
-    # Ensure the round exists and belongs to the game session
-    round = db.get(GameRound, round_id)
-    if not round:
-        raise HTTPException(status_code=404, detail="Round not found")
-    if round.game_id != game_id:
-        raise HTTPException(
-            status_code=400, detail="Round does not belong to this game session"
-        )
+    # Ensure the game session exists and is active, and that the round belongs to it
+    game = ensure_game_exists_and_active(db, game_id)
+    round = ensure_round_belongs(db, game_id, round_id)
     if round.is_completed:
         raise HTTPException(status_code=400, detail="Round is already completed")
 
@@ -147,3 +119,27 @@ def submit_guess_for_round(
             else f"Incorrect. The animal was from {species.location}."
         ),
     }
+
+
+def ensure_game_exists_and_active(db: Session, game_id: uuid.UUID) -> GameSession:
+    """Return the GameSession if it exists and is active, otherwise raise HTTPException."""
+    game = db.get(GameSession, game_id)
+    if not game:
+        raise HTTPException(status_code=404, detail="Game session not found")
+    if game.is_active is False:
+        raise HTTPException(status_code=400, detail="Game session is not active")
+    return game
+
+
+def ensure_round_belongs(
+    db: Session, game_id: uuid.UUID, round_id: uuid.UUID
+) -> GameRound:
+    """Return the GameRound if it exists and belongs to the provided game_id, otherwise raise HTTPException."""
+    round = db.get(GameRound, round_id)
+    if not round:
+        raise HTTPException(status_code=404, detail="Round not found")
+    if round.game_id != game_id:
+        raise HTTPException(
+            status_code=400, detail="Round does not belong to this game session"
+        )
+    return round
