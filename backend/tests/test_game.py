@@ -36,7 +36,7 @@ def test_full_game_loop(auth_client):
     # 4. Make Correct Guess
     guess_res = auth_client.post(
         f"/game/{game_id}/{round_id}/guess",
-        data={"guess": "testland"},  # Matches our conftest.py seed data
+        data={"guess": "testland"},
     )
     assert guess_res.status_code == 200
     data = guess_res.json()
