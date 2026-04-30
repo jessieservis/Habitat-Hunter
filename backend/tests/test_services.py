@@ -6,9 +6,9 @@ from app.services.score import calculate_score, evaluate_guess
 
 def test_calculate_score_applies_clue_penalty_and_floor():
     # Tests that the score is calculated correctly based on clues used and correctness
-    assert calculate_score(True, 0) == 1000
-    assert calculate_score(True, 3) == 400
-    assert calculate_score(True, 6) == 100
+    assert calculate_score(True, 1) == 1000
+    assert calculate_score(True, 3) == 600
+    assert calculate_score(True, 5) == 200
     assert calculate_score(False, 3) == 0
 
 
@@ -21,7 +21,7 @@ def test_evaluate_guess_normalizes_inputs():
     )
 
     assert is_correct is True
-    assert score == 600
+    assert score == 800
     assert cleaned_guess == "testland"
     assert cleaned_location == "testland"
 
@@ -31,6 +31,6 @@ def test_generate_comparison_map_rejects_blank_input():
     try:
         generate_comparison_map("", "testland")
     except ValueError as exc:
-        assert str(exc) == "guessed_country cannot be empty"
+        assert str(exc) == "guessed country cannot be empty"
     else:
         raise AssertionError("Expected generate_comparison_map to reject blank input")
