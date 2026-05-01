@@ -8,7 +8,7 @@ A FastAPI project: Guess the location of endangered species.
 4. In one, open the frontend folder using ``cd frontend``
 5. In the other, open the backend folder using ``cd backend``
 6. In the backend terminal, run ``uvicorn app.main:app --reload``
-7. In the frontend terminal, run ``npm run dev`` and open the link provided
+7. In the frontend terminal, run ``npm i``, then ``npm run dev`` and open the link provided
 
 # Environment
 Set the JWT secret used to sign access tokens. In development you can set a temporary value, but
@@ -31,6 +31,9 @@ The application will warn at startup if `JWT_SECRET_KEY` is not set.
 2. Figma Make for frontend dev
    1. includes components from [shadcn/ui](https://ui.shadcn.com/) used under [MIT license](https://github.com/shadcn-ui/ui/blob/main/LICENSE.md).
    2. includes photos from [Unsplash](https://unsplash.com) used under [license](https://unsplash.com/license).
+3. https://cnets-teach.gitlab.io/cmich-cps-420/
+4. GPT-5.4 mini
+5. Gemini Pro
 
 
 # Credits
